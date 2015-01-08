@@ -1,5 +1,6 @@
 using ErrorFreeTransforms
-using Base.Test
+using FactCheck
 
-# write your own tests here
-@test 1 == 1
+include("add.jl")
+include("mul.jl")
+include("fma.jl")
