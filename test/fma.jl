@@ -25,5 +25,5 @@ end
 facts("Approximated error fma") do
   a, b, c = (113.02200249893586,55.716264204969825,9141.765779129744)
   x, y = err_fma_approx(a, b, c)
-  @fact abs(BigFloat(a)*BigFloat(b)+BigFloat(c)-BigFloat(x)-BigFloat(y)) => less_than_or_equal(ldexp(14.,-53))
+  @fact BigFloat(a)*BigFloat(b)+BigFloat(c) => roughly(BigFloat(x)+BigFloat(y), ldexp(14*abs(x),-53))
 end
