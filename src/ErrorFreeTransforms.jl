@@ -14,6 +14,11 @@ export
   # mul.jl
   fsplit,
   err_mul,
-  err_fast_mul
+  err_fast_mul,
+
+  # fma.jl
+  err_fma
+  err_fma_nearest
+  err_fma_approx
 
 end

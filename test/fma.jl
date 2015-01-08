@@ -9,3 +9,21 @@ facts("Fused multiply-add") do
     # The correct results is 6.432965130281577e-5
   end
 end
+
+facts("Error-free fma") do
+  a, b, c = (5.462577550234297e6,-2.7361786238478348e6,-2.6708293270125585e6)
+  x, y, z = err_fma(a, b, c)
+  @fact BigFloat(a)*BigFloat(b)+BigFloat(c) => BigFloat(x)+BigFloat(y)+BigFloat(z)
+end
+
+facts("Nearest error fma") do
+  t = (875.9068547049504,18.125507806255648,52973.433931470114)
+  x, y, z = err_fma(t...)
+  @fact err_fma_nearest(t...) => x, y
+end
+
+facts("Approximated error fma") do
+  a, b, c = (113.02200249893586,55.716264204969825,9141.765779129744)
+  x, y = err_fma_approx(a, b, c)
+  @fact abs(BigFloat(a)*BigFloat(b)+BigFloat(c)-BigFloat(x)-BigFloat(y)) => less_than_or_equal(ldexp(14.,-53))
+end
