@@ -15,10 +15,14 @@ facts("Float split") do
 end
 
 facts("Error-free multiply") do
-  x, y = err_mul(2.1, .3)
-  @fact BigFloat(x+y) => BigFloat(2.1*.3)
+  a = float64(0x10000000000001)
+  b = 3.0e0
+  x, y = err_mul(a, b)
+  @fact big(x)+big(y) => big(a)*big(b)
 end
 
 facts("Fast error-free multiply") do
-  @fact err_fast_mul(2.1, .3) => err_mul(2.1, .3)
+  a = float64(0x10000000000001)
+  b = 3.0e0
+  @fact err_fast_mul(a, b) => err_mul(a, b)
 end
