@@ -32,7 +32,8 @@ end
 
 @doc """
   Computes the error-free fused multiply-add `a * b + c = x + y + z`, where
-  `x = fl(fma(a, b, c))`. This algorithm requires 20 flops.
+  `x = fl(fma(a, b, c))`. This algorithm requires 17 flops. Different from
+  `err_fma_compr`, it is possible that `y` and `z` are overlapping.
 
   References:
 
@@ -45,6 +46,29 @@ end
 function err_fma{T<:IEEE754}(a::T, b::T, c::T)
   x = fma(a, b, c)
   p, q = err_fast_mul(a, b)
+  s, z = err_add(c, q) # not necessary if |c| ≥ |a b| or |c| ≥ |p| (requires 6 flops)
+  u, v = err_add(p, s)
+  y = (u-x) + v
+  x, y, z
+end
+
+
+@doc """
+  Computes the error-free fused multiply-add `a * b + c = x + y + z`, where
+  `x = fl(fma(a, b, c))` and `x`, `y`, `z` are non-overlapping. This algorithm
+  requires 20 flops.
+
+  References:
+
+  * S. Boldo, and J.M. Muller, Some functions computable with a fused-mac,
+  Proceedings of the 17th Symposium on Computer Arithmetic, IEEE Computer
+  Society Press, 2005.
+  * S. Boldo, and J.M. Muller, Exact and approximated error of the FMA, IEEE
+  Transactions on Computers 60, pp.157-164, 2011.
+  """ ->
+function err_fma_compr{T<:IEEE754}(a::T, b::T, c::T)
+  x = fma(a, b, c)
+  p, q = err_fast_mul(a, b)
   s, t = err_add(c, q) # not necessary if |c| ≥ |a b| or |c| ≥ |p| (requires 6 flops)
   u, v = err_add(p, s)
   w = (u-x) + v
@@ -55,7 +79,8 @@ end
 
 @doc """
   Instead of accurately computing the error-free fused multiply-add as in
-  `err_fma`, return only one error term `y`: `|(a * b + c) - x - y| ≤ ulp(y)/2.
+  `err_fma_compr`, return only one error term `y`: `|(a * b + c) - x - y| ≤
+  ulp(y)/2`.
 
   References:
 
@@ -86,7 +111,7 @@ end
 function err_fma_approx{T<:IEEE754}(a::T, b::T, c::T)
   x = fma(a, b, c)
   p, q = err_fast_mul(a, b)
-  s, t = err_add(c, p)
-  y = (s-x) + (q+t)
+  u, v = err_add(p, c)
+  y = (u-x) + (q+v)
   x, y
 end
