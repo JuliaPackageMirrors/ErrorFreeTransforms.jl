@@ -1,16 +1,16 @@
 facts("Float split") do
   context("Float32") do
-    x, y = fsplit(2.3f-2)
-    @fact 2.3f-2 => x + y
-    @fact abs(x) => greater_than(abs(y))
-    # TODO: non overlapping
+    hi, lo = fsplit(float32(0x8017))
+    # assuming hi and lo different from zero
+    @fact exponent(hi)-exponent(lo) => greater_than_or_equal(12)
+    @fact trailing_zeros(int32(ldexp(significand(hi), 23))) => greater_than_or_equal(12)
   end
 
   context("Float64") do
-    x, y = fsplit(-3.1)
-    @fact -3.1 => x + y
-    @fact abs(x) => greater_than(abs(y))
-    # TODO: non overlapping
+    hi, lo = fsplit(float64(0x8000005))
+    # assuming hi and lo different from zero
+    @fact exponent(hi)-exponent(lo) => greater_than_or_equal(27)
+    @fact trailing_zeros(int64(ldexp(significand(hi), 52))) => greater_than_or_equal(27)
   end
 end
 
