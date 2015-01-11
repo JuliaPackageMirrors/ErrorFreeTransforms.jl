@@ -15,8 +15,8 @@ for T in (Float32, Float64)
     function fsplit(a::$T)
       # Float32: factor = 2^12 + 1 = 4097
       # Float64: factor = 2^27 + 1 = 134217729
-      factor = $(convert(T, 2^ceil(precision(T)/2)+1));
-      c = a * factor
+      f = $(convert(T, 2^ceil(precision(T)/2)+1));
+      c = a * f
       h = c - (c-a)
       l = a - h
       h, l
