@@ -1,3 +1,6 @@
+# FIXME: Remove once fma is implemented in julia
+using ErrorFreeTransforms.fma
+
 facts("Fused multiply-add") do
   context("Float32") do
     a = float32(0x1000002)

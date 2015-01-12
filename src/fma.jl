@@ -1,5 +1,5 @@
+# FIXME: Remove once fma is implemented in julia
 if !isdefined(:fma)
-  # TODO: Extend the definition to floating-point arrays
   for (T, t, i) in ((Float32, "float", "f32"), (Float64, "double", "f64"))
     @eval begin
       function fma(a::$T, b::$T, c::$T)
