@@ -17,7 +17,6 @@ function err_add{T<:IEEE754}(a::T, b::T)
   x = a + b
   c = x - a
   y = (a - (x-c)) + (b-c)
-
   x, y
 end
 
